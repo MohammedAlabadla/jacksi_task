@@ -1,16 +1,24 @@
 # jacksi
 
-A new Flutter project.
+This is the flutter test task for the job at Jacksi.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+I am Mohammed Alabadla, and i am a Flutter developer
+Email: mohmmed.alabadla@gmail.com
+Phone: 970567714136
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## App Content
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- git =>> State manemgment.
+- shared_preferences ==> local database.
+
+
+## app functions
+
+- View all products and main categories.
+- Add new products
+- change the view order of products.
+- filter the products.
+- remove products in the vertical list- swipe from right to left.
