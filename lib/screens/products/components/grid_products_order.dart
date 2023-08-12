@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:jacksi/controllers/home_controller.dart';
 
 import '../../../constants/constants.dart';
+import '../../widgets/image_view.dart';
 
 class GridProductsOrder extends StatelessWidget {
   GridProductsOrder({super.key});
@@ -33,11 +34,9 @@ class GridProductsOrder extends StatelessWidget {
             // image
             ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
-              child: Image.asset(
-                'assets/images/product1_img.png',
-                width: double.infinity,
+              child: ImageView(
+                path: homeController.products[index].images!.first,
                 height: 115.h,
-                fit: BoxFit.cover,
               ),
             ),
             SizedBox(height: 10.w),
