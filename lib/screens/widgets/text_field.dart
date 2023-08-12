@@ -74,19 +74,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(14.r),
             borderSide: widget.enableBorder
                 ? const BorderSide(color: Colors.black12)
                 : BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(14.r),
             borderSide: widget.enableBorder
                 ? const BorderSide(color: kPrimColor)
                 : BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(14.r),
             borderSide: widget.enableBorder
                 ? const BorderSide(color: Colors.black12)
                 : BorderSide.none,

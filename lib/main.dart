@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:jacksi/controllers/home_controller.dart';
 import 'package:jacksi/utils/locale_db.dart';
 
 import 'constants/constants.dart';
-import 'controllers/app_binding.dart';
 import 'screens/auth/splash_screen.dart';
 
 void main() async {
@@ -28,11 +28,10 @@ class MyApp extends StatelessWidget {
           title: 'jacksi',
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.light,
-          initialBinding: AppBindings(),
           locale: const Locale('ar'),
           fallbackLocale: const Locale('ar'),
           theme: ThemeData(
-            fontFamily: '',
+            fontFamily: kFontFamilyName,
             primaryColor: kPrimColor,
             scaffoldBackgroundColor: ksbgColor,
             appBarTheme: AppBarTheme(
@@ -43,6 +42,7 @@ class MyApp extends StatelessWidget {
               titleTextStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22.sp,
+                color: Colors.black,
                 fontFamily: kFontFamilyName,
               ),
             ),
@@ -53,17 +53,11 @@ class MyApp extends StatelessWidget {
               decorationColor: Colors.black,
               fontFamily: kFontFamilyName,
             ),
-            elevatedButtonTheme: const ElevatedButtonThemeData(),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(
-                  letterSpacing: 0,
-                  fontFamily: kFontFamilyName,
-                ),
-              ),
-            ),
           ),
           home: const SplashScreen(),
+          onInit: () {
+            Get.put(HomeController());
+          },
         );
       },
     );

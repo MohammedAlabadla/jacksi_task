@@ -13,6 +13,7 @@ class AppKeys {
   AppKeys._();
   static AppKeys keys = AppKeys._();
   //
-  final String locale = 'locale';
+  final String productList = 'productList';
+
   //
 }

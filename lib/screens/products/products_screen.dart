@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:jacksi/constants/constants.dart';
-import 'package:jacksi/models/category.dart';
 import 'package:jacksi/screens/add_product/add_product_screen.dart';
 import 'package:jacksi/screens/widgets/buttons.dart';
+import 'package:jacksi/screens/widgets/no_products.dart';
 
+import '../../controllers/home_controller.dart';
+import '../../utils/category_utils.dart';
 import 'components/grid_products_order.dart';
 import 'components/list_products_order.dart';
 
@@ -16,40 +18,51 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  //
+  final homeController = Get.find<HomeController>();
+
+  //
   int selectedCatId = 0;
   bool isGridOrder = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppbar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerRight,
-              padding: EdgeInsets.only(bottom: 10.h, right: 16.w, left: 16.w),
-              child: Text(
-                'التصنيفات',
-                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+      body: GetBuilder(
+        init: homeController,
+        builder: (_) => SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.only(bottom: 10.h, right: 16.w, left: 16.w),
+                child: Text(
+                  'التصنيفات',
+                  style:
+                      TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            buildCategoriesList(),
-            Padding(
-              padding: EdgeInsets.all(16.r),
-              child: Column(
-                children: [
-                  changeProductsViewOrdersBtn(),
-                  SizedBox(height: 15.h),
-                  //
-                  isGridOrder
-                      ? const GridProductsOrder()
-                      : const ListProductsOrder(),
-
-                  //
-                ],
+              buildCategoriesList(),
+              // items
+              Padding(
+                padding: EdgeInsets.all(16.r),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (homeController.products.isNotEmpty)
+                      changeProductsViewOrdersBtn(),
+                    SizedBox(height: 15.h),
+                    homeController.products.isEmpty
+                        ? const NoProductsWidget()
+                        : isGridOrder
+                            ? GridProductsOrder()
+                            : ListProductsOrder(),
+                    //
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -71,7 +84,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Image.asset('assets/icons/view_ic.png', width: 20.w),
               SizedBox(width: 10.w),
               Text(
-                'تغيير عرض المنتجات الى افقي',
+                isGridOrder
+                    ? 'تغيير عرض المنتجات الى عمودي'
+                    : 'تغيير عرض المنتجات الى افقي',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -90,7 +105,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       height: 115.h,
       width: double.infinity,
       child: ListView.separated(
-        itemCount: CategoryModel.categories.length + 1,
+        itemCount: CategoryUtils.categories.length + 1,
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.only(right: 16.w, left: 16.w),
         separatorBuilder: (context, index) => SizedBox(width: 8.w),
@@ -98,7 +113,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
           // show-all-products
           if (index == 0) {
             return InkWell(
-              onTap: () => setState(() => selectedCatId = index),
+              onTap: () {
+                selectedCatId = index;
+                homeController.filterProducts(showAll: true);
+                // setState(() => );
+              },
               child: Container(
                 width: 95.w,
                 padding: EdgeInsets.all(8.r),
@@ -141,7 +160,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
             );
           }
           return InkWell(
-            onTap: () => setState(() => selectedCatId = index),
+            onTap: () {
+              selectedCatId = index;
+              homeController.filterProducts(
+                showAll: false,
+                categoryModel: CategoryUtils.categories[selectedCatId - 1],
+              );
+              // setState(() => );
+            },
             child: Container(
               width: 95.w,
               padding: EdgeInsets.all(8.r),
@@ -161,7 +187,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.r),
                       child: Image.asset(
-                        CategoryModel.categories[index - 1].imagePath!,
+                        CategoryUtils.categories[index - 1].imagePath!,
                         scale: 5 / 1.5,
                         fit: BoxFit.cover,
                       ),
@@ -170,7 +196,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Flexible(
                     child: Center(
                       child: Text(
-                        CategoryModel.categories[index - 1].nameAr!,
+                        CategoryUtils.categories[index - 1].nameAr!,
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -189,26 +215,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   AppBar buildAppbar() {
     return AppBar(
-      title: const Text(
-        'المنتجات',
-        style: TextStyle(color: Colors.black),
-      ),
+      title: const Text('المنتجات'),
       toolbarHeight: 50.h,
       actions: [
         Container(
-          width: 50.w,
-          height: 50.h,
-          margin: EdgeInsets.only(left: 30.w),
+          width: 45.w,
+          margin: EdgeInsets.only(left: 25.w, top: 5.h),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: Colors.black26),
+            border: Border.all(color: Colors.black12),
           ),
-          child: IconButton(
-            onPressed: () => Get.to(() => const AddProductScreen()),
-            icon: Icon(Icons.add, color: Colors.black, size: 30.w),
-            splashRadius: 30,
+          child: InkWell(
+            onTap: () => Get.to(() => const AddProductScreen()),
+            child: Icon(Icons.add, color: Colors.black, size: 30.w),
           ),
         ),
       ],

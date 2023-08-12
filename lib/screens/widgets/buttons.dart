@@ -10,7 +10,7 @@ class CustomElevatedBtn extends StatelessWidget {
     required this.child,
     this.borderRadius,
     this.width,
-    this.height = 45,
+    this.height = 60,
     this.bgColor = kPrimColor,
     this.border,
     this.isBorder = false,
@@ -32,7 +32,7 @@ class CustomElevatedBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var bborder = border ?? Border.all(color: Colors.black38);
-    final borderRadius = this.borderRadius ?? BorderRadius.circular(5.r);
+    final borderRadius = this.borderRadius ?? BorderRadius.circular(14.r);
     return Container(
       width: width?.w,
       height: height.h,

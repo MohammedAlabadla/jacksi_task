@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,10 +6,12 @@ import 'package:jacksi/utils/fetch_images_utility.dart';
 
 import '../../../constants/constants.dart';
 import '../../widgets/buttons.dart';
-import 'no_images.dart';
+import '../../widgets/no_images.dart';
 
 class ProductImages extends StatefulWidget {
-  const ProductImages({super.key});
+  const ProductImages({super.key, required this.onItemSelected});
+
+  final Function(List<String>) onItemSelected;
 
   @override
   State<ProductImages> createState() => _ProductImagesState();
@@ -20,21 +20,26 @@ class ProductImages extends StatefulWidget {
 class _ProductImagesState extends State<ProductImages> {
   List<XFile> images = [];
 
+  getImagesBack() {
+    widget.onItemSelected(images.map((e) => e.path).toList());
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        images.isEmpty ? const BuildNoImagesList() : buildImageList(),
+        // images-widgets
+        images.isEmpty ? const NoImagesWidget() : buildImageList(),
         //
-        // add-images-btn
+        // add-btn
         SizedBox(height: 20.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: CustomElevatedBtn(
             onPressed: () async {
               images.addAll(await MediaUtility.instance.pickMultiImage());
-              log('image ==> ${images.length}');
-              setState(() {});
+              getImagesBack();
             },
             height: 60.h,
             borderRadius: BorderRadius.circular(10.r),
@@ -47,7 +52,7 @@ class _ProductImagesState extends State<ProductImages> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5.r),
                   ),
-                  child: const Icon(Icons.add, color: kPrimColor),
+                  child: const Icon(Icons.add, color: kPrimColor, size: 18),
                 ),
                 Text(
                   'اضغط لاضافة الصور',
@@ -64,6 +69,7 @@ class _ProductImagesState extends State<ProductImages> {
     );
   }
 
+  // images-list
   SizedBox buildImageList() {
     return SizedBox(
       height: 100.h,
@@ -71,14 +77,14 @@ class _ProductImagesState extends State<ProductImages> {
         itemCount: images.length,
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.r),
-        separatorBuilder: (context, index) => SizedBox(width: 5.w),
+        separatorBuilder: (context, index) => SizedBox(width: 3.w),
         itemBuilder: (context, index) => SizedBox(
           width: 100.w,
           child: Stack(
             children: [
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(7.r),
+                  borderRadius: BorderRadius.circular(5.r),
                   child: Image.file(
                     File(images[index].path),
                     fit: BoxFit.cover,
@@ -91,15 +97,17 @@ class _ProductImagesState extends State<ProductImages> {
                 child: InkWell(
                   onTap: () {
                     images.removeAt(index);
-                    setState(() {});
+                    getImagesBack();
                   },
                   child: Container(
                     width: 25.w,
+                    padding: EdgeInsets.all(2.r),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.red.withOpacity(.4),
+                      color: const Color(0xffFF0000).withOpacity(.7),
                     ),
-                    child: const Icon(Icons.close, color: Colors.red, size: 22),
+                    child:
+                        const Icon(Icons.close, color: Colors.white, size: 20),
                   ),
                 ),
               ),

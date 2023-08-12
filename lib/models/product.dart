@@ -1,9 +1,11 @@
+import 'package:jacksi/models/category.dart';
+
 class Product {
   String? id;
   String? nameAR;
   String? storeNameAr;
   double? price;
-  String? categoryAr;
+  CategoryModel? category;
   List<String>? images;
 
   Product({
@@ -11,7 +13,7 @@ class Product {
     this.nameAR,
     this.storeNameAr,
     this.price,
-    this.categoryAr,
+    this.category,
     this.images,
   });
 
@@ -19,7 +21,7 @@ class Product {
         id: json['id'],
         nameAR: json['nameAR'],
         storeNameAr: json['storeNameAr'],
-        categoryAr: json['categoryAr'],
+        category: CategoryModel.fromJson(json['category']),
         price: json['price']?.toDouble(),
         images: List<String>.from(json['images'] ?? []),
       );
@@ -29,7 +31,7 @@ class Product {
         'nameAR': nameAR,
         'storeNameAr': storeNameAr,
         'price': price,
-        'categoryAr': categoryAr,
+        'category': category,
         'images': images,
       };
 }
